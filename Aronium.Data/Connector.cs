@@ -306,6 +306,20 @@ namespace Aronium.Data
             }
         }
 
+        /// <summary>
+        /// In case of null or <see cref="DBNull"/> returns default value, othrwise, returns instance of specified type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">Type to return.</typeparam>
+        /// <param name="obj">Object to valudate and return as instance of specified type.</param>
+        /// <returns>Null if object is <see cref="DBNull"/> or instance of specified type.</returns>
+        private static T DefautIfNull<T>(object obj)
+        {
+            if (obj == null || obj == DBNull.Value)
+                return default;
+
+            return (T)obj;
+        }
+
         #endregion
 
         #region - Public methods -
@@ -480,10 +494,7 @@ namespace Aronium.Data
                 obj = SelectValueInternal(query, args, rowMapper, connection);
             }
 
-            if (obj == null)
-                return default(T);
-
-            return (T)obj;
+            return DefautIfNull<T>(obj);
         }
 
         /// <summary>
@@ -499,10 +510,7 @@ namespace Aronium.Data
         {
             object obj = SelectValueInternal(query, args, rowMapper, transaction.Connection, transaction);
 
-            if (obj == null)
-                return default(T);
-
-            return (T)obj;
+            return DefautIfNull<T>(obj);
         }
 
         /// <summary>
